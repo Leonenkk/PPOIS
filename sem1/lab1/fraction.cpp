@@ -55,7 +55,7 @@ Fraction operator+(int num, const Fraction& frac) { return Fraction(num) + frac;
 Fraction& Fraction::operator-=(const Fraction& other) { *this = *this - other; return *this; }
 Fraction Fraction::operator-(const Fraction& other) const { return *this + (-other); }
 
-Fraction Fraction::operator-() const { return Fraction(sign.visual == '+' ? '-' : '+', up, down); }
+Fraction Fraction::operator-() const { return Fraction(sign.get_visual() == '+' ? '-' : '+', up, down); }
 Fraction& Fraction::operator-=(int num) { *this = *this - num; return *this; }
 Fraction Fraction::operator-(int num) const { return *this + (-num); }
 Fraction operator-(int num, const Fraction& frac) { return Fraction(num) - frac; }

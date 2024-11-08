@@ -1,0 +1,8 @@
+//
+// Created by maksim on 08.11.2024.
+//
+
+#ifndef MARKETINGDEPARTMENT_H
+#define MARKETINGDEPARTMENT_H
+
+#endif //MARKETINGDEPARTMENT_H

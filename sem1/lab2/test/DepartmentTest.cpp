@@ -40,7 +40,6 @@ TEST_F(DepartmentTest, AddEmployee) {
     EXPECT_EQ(department->getCountOfEmployees(), 3);
     EXPECT_EQ(department->getEmployees().size(), 3);
 }
-
 TEST_F(DepartmentTest, RemoveEmployee) {
     department->removeEmployee(1);
 

@@ -1,8 +1,0 @@
-//
-// Created by maksim on 02.11.2024.
-//
-
-#ifndef TECHNICALDEPARTMENT_H
-#define TECHNICALDEPARTMENT_H
-
-#endif //TECHNICALDEPARTMENT_H

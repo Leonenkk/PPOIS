@@ -1,8 +1,0 @@
-//
-// Created by maksim on 02.11.2024.
-//
-
-#ifndef LOGISTICSDEPARTMENT_H
-#define LOGISTICSDEPARTMENT_H
-
-#endif //LOGISTICSDEPARTMENT_H

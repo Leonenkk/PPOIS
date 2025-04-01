@@ -1,4 +1,5 @@
 from dataclasses import dataclass,field
+import random
 from typing import Dict,Any,List
 from product import Product,MarketplaceError
 
@@ -7,7 +8,9 @@ class Trader:
     trader_id:int
     name:str
     contact_info:str
+    capital:float=field(default_factory=lambda: round(random.uniform(1000,2000),2))
     products:List[Product]=field(default_factory=list)
+
 
     def __post_init__(self):
         if self.name is None:
@@ -16,6 +19,8 @@ class Trader:
             raise MarketplaceError("Trader contact info cannot be None")
         if not self.trader_id or self.trader_id<=0:
             raise MarketplaceError("Trader id is incorrect")
+        if self.capital<1000 or self.capital>2000:
+            raise MarketplaceError("Trader capital is out of range")
 
     def add_product(self,product:Product)->None:
         if any(p.product_id==product.product_id for p in self.products):
@@ -37,7 +42,8 @@ class Trader:
             "trader_id":self.trader_id,
             "name":self.name,
             "contact_info":self.contact_info,
-            "products": [product.to_dict() for product in self.products]
+            "products": [product.to_dict() for product in self.products],
+            "capital":self.capital,
         }
 
     @classmethod
@@ -47,7 +53,8 @@ class Trader:
             trader_id=data["trader_id"],
             name=data["name"],
             contact_info=data["contact_info"],
-            products=products
+            products=products,
+            capital=data.get("capital",round(random.uniform(1000,2000),2)),
         )
 
     def __str__(self):

@@ -1,160 +1,152 @@
 import json
-import random
-from typing import Dict, Any
+from datetime import datetime
+from typing import Dict, List, Type, Any
+from dataclasses import asdict
 from trader import Trader
-from buyer import Buyer
 from stand import Stand
-from product import Product, MarketplaceError
-from advertisement import Advertisement
+from product import Product
+from buyer import Buyer
 from attraction import Attraction
+from advertisement import Advertisement
+from utils import MarketplaceError
 
-
-class MarketPlace:
-    def __init__(self) -> None:
-        self.traders: Dict[int, Trader] = {}
-        self.buyers: Dict[int, Buyer] = {}
-        self.stands: Dict[int, Stand] = {}
-        self.products: Dict[int, Product] = {}
-        self.advertisements: Dict[int, Advertisement] = {}
-        self.attractions: Dict[int, Attraction] = {}
-
-
-    def add_trader(self, trader: Trader) -> None:
-        if trader.trader_id in self.traders:
-            raise MarketplaceError(f"Trader with id {trader.trader_id} already exists.")
-        self.traders[trader.trader_id] = trader
-
-    def add_buyer(self, buyer: Buyer) -> None:
-        if buyer.buyer_id in self.buyers:
-            raise MarketplaceError(f"Buyer with id {buyer.buyer_id} already exists.")
-        self.buyers[buyer.buyer_id] = buyer
-
-    def add_stand(self, stand: Stand) -> None:
-        if stand.stand_id in self.stands:
-            raise MarketplaceError(f"Stand with id {stand.stand_id} already exists.")
-        self.stands[stand.stand_id] = stand
-
-    def add_product(self, product: Product) -> None:
-        if product.product_id in self.products:
-            raise MarketplaceError(f"Product with id {product.product_id} already exists.")
-        self.products[product.product_id] = product
-
-    def add_advertisement(self, ad: Advertisement) -> None:
-        if ad.ad_id in self.advertisements:
-            raise MarketplaceError(f"Advertisement with id {ad.ad_id} already exists.")
-        self.advertisements[ad.ad_id] = ad
-
-    def add_attraction(self, attraction: Attraction) -> None:
-        if attraction.attraction_id in self.attractions:
-            raise MarketplaceError(f"Attraction with id {attraction.attraction_id} already exists.")
-        self.attractions[attraction.attraction_id] = attraction
-
-    def trade_product(self, buyer_id: int, trader_id: int, product_id: int) -> float:
-        if buyer_id not in self.buyers:
-            raise MarketplaceError(f"Buyer with id {buyer_id} does not exist.")
-        if trader_id not in self.traders:
-            raise MarketplaceError(f"Trader with id {trader_id} does not exist.")
-        buyer = self.buyers[buyer_id]
-        trader = self.traders[trader_id]
-        product = None
-        for p in trader.products:
-            if p.product_id == product_id:
-                product = p
-                break
-        if product is None:
-            raise MarketplaceError(f"Product with id {product_id} not found in trader's inventory.")
-
-        base_price = product.price
-        final_price = base_price
-
-        if random.choice([True, False]):
-            final_price = base_price * 0.85
-            if random.choice([True, False]):
-                final_price = final_price * 0.90
-
-        if final_price > 2000:
-            final_price = 2000
-
-        if buyer.balance < final_price:
-            raise MarketplaceError("Buyer does not have enough balance to purchase this product.")
-
-        buyer.balance -= final_price
-        trader.capital += final_price
-
-        product.mark_as_sold()
-        trader.remove_product(product_id)
-        buyer.cart.add_to_cart(product)
-        return final_price
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "traders": {tid: trader.to_dict() for tid, trader in self.traders.items()},
-            "buyers": {bid: buyer.to_dict() for bid, buyer in self.buyers.items()},
-            "stands": {sid: stand.to_dict() for sid, stand in self.stands.items()},
-            "products": {pid: product.to_dict() for pid, product in self.products.items()},
-            "advertisements": {ad_id: ad.to_dict() for ad_id, ad in self.advertisements.items()},
-            "attractions": {aid: attraction.to_dict() for aid, attraction in self.attractions.items()}
+class MarketplaceManager:
+    def __init__(self, save_file: str = "marketplace_state.json"):
+        self.save_file = save_file
+        self.traders: List[Trader] = []
+        self.buyers: List[Buyer] = []
+        self.attractions: List[Attraction] = []
+        self.advertisements: List[Advertisement] = []
+        self.negotiations: Dict[int, Dict] = {}
+        self.last_ids: Dict[Type, int] = {
+            Trader: 0, Product: 0,
+            Buyer: 0, Attraction: 0,
+            Advertisement: 0, object: 0
         }
 
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'MarketPlace':
-        mp = cls()
-        mp.traders = {int(tid): Trader.from_dict(trader_data) for tid, trader_data in data.get("traders", {}).items()}
-        mp.buyers = {int(bid): Buyer.from_dict(buyer_data) for bid, buyer_data in data.get("buyers", {}).items()}
-        mp.stands = {int(sid): Stand.from_dict(stand_data) for sid, stand_data in data.get("stands", {}).items()}
-        mp.products = {int(pid): Product.from_dict(product_data) for pid, product_data in data.get("products", {}).items()}
-        mp.advertisements = {int(ad_id): Advertisement.from_dict(ad_data) for ad_id, ad_data in data.get("advertisements", {}).items()}
-        mp.attractions = {int(aid): Attraction.from_dict(attr_data) for aid, attr_data in data.get("attractions", {}).items()}
-        return mp
+    def _get_next_id(self, entity_type: Type) -> int:
+        self.last_ids[entity_type] += 1
+        return self.last_ids[entity_type]
+
+    def create_trader(self, name: str, contact: str) -> Trader:
+        trader = Trader(
+            trader_id=self._get_next_id(Trader),
+            name=name,
+            contact_info=contact
+        )
+        self.traders.append(trader)
+        self.save_state()
+        return trader
+
+    def add_product(self, trader_id: int, product_data: Dict) -> Product:
+        product = Product(
+            product_id=self._get_next_id(Product),
+            **product_data
+        )
+        trader = next(t for t in self.traders if t.trader_id == trader_id)
+        trader.add_product(product)
+        self.save_state()
+        return product
 
 
-    def save_to_json(self, file_path: str) -> None:
+    def update_product_price(self, product_id: int, new_price: float) -> None:
+        product = next(p for p in self.get_all_products() if p.product_id == product_id)
+        product.update_price(new_price)
+        self.save_state()
+
+    def create_buyer(self, name: str, contact: str) -> Buyer:
+        buyer = Buyer(
+            buyer_id=self._get_next_id(Buyer),
+            name=name,
+            contact_info=contact
+        )
+        self.buyers.append(buyer)
+        self.save_state()
+        return buyer
+
+    def create_negotiation(self, buyer_id: int, product_id: int, price: float) -> int:
+        for req in self.negotiations.values():
+            if req['product_id'] == product_id and req['buyer_id'] == buyer_id:
+                raise MarketplaceError("Предложение по этому товару уже отправлено. Дождитесь ответа продавца.")
+        request_id = self._get_next_id(object)
+        self.negotiations[request_id] = {
+            'buyer_id': buyer_id,
+            'product_id': product_id,
+            'price': price
+        }
+        self.save_state()
+        return request_id
+
+    def accept_negotiation(self, request_id: int) -> None:
+        request = self.negotiations.pop(request_id)
+        buyer = next(b for b in self.buyers if b.buyer_id == request['buyer_id'])
+        product = next(p for p in self.get_all_products() if p.product_id == request['product_id'])
+        seller = next((t for t in self.traders if product in t.products), None)
+        if buyer.cart.has_product(product.product_id):
+            print("Товар уже в корзине, предложение не будет обработано.")
+            return
+        buyer.cart.negotiated_prices[product.product_id] = request['price']
+        buyer.cart.add_to_cart(product, preserve_negotiated=True)
+        if seller:
+            seller.capital += request['price']
+        self.save_state()
+
+    def create_advertisement(self, description: str) -> Advertisement:
+        ad = Advertisement(
+            ad_id=self._get_next_id(Advertisement),
+            description=description
+        )
+        self.advertisements.append(ad)
+        self.save_state()
+        return ad
+
+    def create_attraction(self, name: str, description: str, ticket_price: float,seller: Trader) -> Attraction:
+        attraction = Attraction(
+            attraction_id=self._get_next_id(Attraction),
+            name=name,
+            description=description,
+            ticket_price=ticket_price,
+            seller_id=seller.trader_id,
+        )
+        self.attractions.append(attraction)
+        self.save_state()
+        return attraction
+
+    def save_state(self) -> None:
+        state = {
+            "traders": [t.to_dict() for t in self.traders],
+            "buyers": [b.to_dict() for b in self.buyers],
+            "ads": [a.to_dict() for a in self.advertisements],
+            "attractions": [a.to_dict() for a in self.attractions],
+            "negotiations": self.negotiations,
+            "last_ids": {k.__name__: v for k, v in self.last_ids.items()}
+        }
+        with open(self.save_file, 'w', encoding='utf-8') as f:
+            json.dump(state, f, default=self._json_serializer, ensure_ascii=False, indent=2)
+
+    def load_state(self) -> None:
         try:
-            with open(file_path, 'w', encoding='utf-8') as f:
-                json.dump(self.to_dict(), f, ensure_ascii=False, indent=4)
-        except Exception as e:
-            raise MarketplaceError(f"Error saving to JSON: {e}")
-
-    @classmethod
-    def load_from_json(cls, file_path: str) -> 'MarketPlace':
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(self.save_file, 'r') as f:
                 data = json.load(f)
-            return cls.from_dict(data)
-        except Exception as e:
-            raise MarketplaceError(f"Error loading from JSON: {e}")
+                self.traders = [Trader.from_dict(t) for t in data["traders"]]
+                self.buyers = [Buyer.from_dict(b) for b in data["buyers"]]
+                self.advertisements = [Advertisement.from_dict(a) for a in data["ads"]]
+                self.attractions = [Attraction.from_dict(a) for a in data["attractions"]]
+                self.negotiations = data.get("negotiations", {})
+                self.last_ids = {eval(k): v for k, v in data["last_ids"].items()}
+        except (FileNotFoundError, KeyError):
+            pass
 
-if __name__ == "__main__":
-    mp = MarketPlace()
+    def _json_serializer(self, obj: Any) -> Any:
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return str(obj)
 
-    trader = Trader(trader_id=1, name="Иван", contact_info="ivan@example.com")
-    buyer = Buyer(buyer_id=1, name="Петр", contact_info="petr@example.com")
-    product = Product(product_id=1, name="Старинное кресло", description="Кресло из 19 века", price=1500.0)
-    print(trader.capital)
-    print(buyer.balance)
-    trader.add_product(product)
+    def get_all_products(self) -> List[Product]:
+        return [p for t in self.traders for p in t.products]
 
-    mp.add_trader(trader)
-    mp.add_buyer(buyer)
-    mp.add_product(product)
+    def get_stands(self) -> List[Stand]:
+        return [t.stand for t in self.traders]
 
-    try:
-        final_price = mp.trade_product(buyer_id=1, trader_id=1, product_id=1)
-        print(f"Trade successful, final price: {final_price}")
-        print(f"Buyer new balance: {buyer.balance}")
-        print(f"Trader new capital: {trader.capital}")
-    except MarketplaceError as e:
-        print(f"Trade failed: {e}")
-
-    ad = Advertisement(ad_id=1, description="Реклама ярмарки!", price=500.0)
-    mp.add_advertisement(ad)
-
-    attraction = Attraction(
-        attraction_id=1,
-        name="Колесо обозрения",
-        description="Потрясающий вид на ярмарку с высоты птичьего полета.",
-        cost=100.0
-    )
-    mp.add_attraction(attraction)
-    mp.save_to_json("marketplace_state.json")
-
+    def get_active_ads(self) -> List[Advertisement]:
+        return [ad for ad in self.advertisements if ad.is_active()]

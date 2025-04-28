@@ -86,8 +86,40 @@ class DatabaseRepository:
 
         return query, params
 
+    def get_players(self) -> List[Player]:
+        query = "SELECT full_name, birth_date, team, home_city, squad, position FROM players"
+        return self._execute_query(query, [])
 
+    def find_players(self, full_name: Optional[str] = None, birth_date: Optional[date] = None,
+                     team: Optional[str] = None, home_city: Optional[str] = None,
+                     squad: Optional[str] = None, position: Optional[str] = None) -> List[Player]:
+        query, params = self._build_search_query(full_name, birth_date, team, home_city, squad, position)
+        return self._execute_query(query, params)
 
+    def _build_search_query(self, full_name, birth_date, team, home_city, squad, position):
+        query = "SELECT full_name, birth_date, team, home_city, squad, position FROM players WHERE 1=1"
+        params = []
+
+        if full_name:
+            query += " AND full_name LIKE ?"
+            params.append(f"%{full_name}%")
+        if birth_date:
+            query += " AND birth_date = ?"
+            params.append(birth_date.isoformat())
+        if team:
+            query += " AND team LIKE ?"
+            params.append(f"%{team}%")
+        if home_city:
+            query += " AND home_city LIKE ?"
+            params.append(f"%{home_city}%")
+        if squad:
+            query += " AND squad LIKE ?"
+            params.append(f"%{squad}%")
+        if position:
+            query += " AND position LIKE ?"
+            params.append(f"%{position}%")
+
+        return query, params
 
 
 

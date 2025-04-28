@@ -52,3 +52,12 @@ class DatabaseRepository:
         """, (player.full_name, player.birth_date.isoformat(), age, player.team,
               player.home_city, player.squad, player.position))
         self.connection.commit()
+
+# if __name__ == "__main__":
+#     import os
+#     from pathlib import Path
+#     project_root = Path(__file__).parent.parent.parent.resolve()
+#     db_pathe = project_root / "db.sqlite3"
+#     db = DatabaseRepository(str(db_pathe))
+#     players = Player("Maksim Leonenko", date(2005, 11, 16), "Team A", "City X", "Squad Y", "Forward")
+#     db.add_player(players)

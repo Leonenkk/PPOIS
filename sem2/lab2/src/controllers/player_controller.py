@@ -40,3 +40,23 @@ class PlayerController(QObject):
             self.player_added.emit(player)
         except sqlite3.Error as e:
             raise RuntimeError(f"Database error: {str(e)}")
+
+
+    def delete_players(self, full_name: Optional[str] = None, birth_date: Optional[date] = None,
+                       team: Optional[str] = None, home_city: Optional[str] = None,
+                       squad: Optional[str] = None, position: Optional[str] = None) -> int:
+        try:
+            deleted_count = self.db_repo.delete_players(
+                full_name=full_name,
+                birth_date=birth_date,
+                team=team,
+                home_city=home_city,
+                squad=squad,
+                position=position
+            )
+            if deleted_count == 0:
+                raise DeletionFailedError("No matching players found for deletion")
+            self.deletion_results.emit(deleted_count)
+            return deleted_count
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database error: {str(e)}")

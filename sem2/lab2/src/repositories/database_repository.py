@@ -1,7 +1,8 @@
 import sqlite3
 from datetime import date
 from src.models.player import Player
-from typing import List,Optional
+from typing import List, Optional
+
 
 class DatabaseRepository:
     def __init__(self, db_path: str):
@@ -121,14 +122,19 @@ class DatabaseRepository:
 
         return query, params
 
+    def get_paginated_players(self, offset: int, limit: int) -> List[Player]:
+        query = """
+            SELECT full_name, birth_date, team, home_city, squad, position 
+            FROM players 
+            LIMIT ? OFFSET ?
+        """
+        params = [limit, offset]
+        return self._execute_query(query, params)
 
+    def count_players(self) -> int:
+        self.cursor.execute("SELECT COUNT(*) FROM players")
+        return self.cursor.fetchone()[0]
 
-
-# if __name__ == "__main__":
-#     import os
-#     from pathlib import Path
-#     project_root = Path(__file__).parent.parent.parent.resolve()
-#     db_pathe = project_root / "db.sqlite3"
-#     db = DatabaseRepository(str(db_pathe))
-#     players = Player("Maksim Leonenko", date(2005, 11, 16), "Team A", "City X", "Squad Y", "Forward")
-#     db.add_player(players)
+    def delete_all_players(self) -> None:
+        self.cursor.execute("DELETE FROM players")
+        self.connection.commit()

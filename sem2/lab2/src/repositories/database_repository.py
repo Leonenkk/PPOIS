@@ -22,3 +22,5 @@ class DatabaseRepository:
             )
         """)
         self.connection.commit()
+
+    

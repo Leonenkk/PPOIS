@@ -108,3 +108,26 @@ class PlayerController(QObject):
             return self.delete_players(**delete_conditions)
         except (DeletionFailedError, RuntimeError):
             return 0
+
+    def convert_players_to_tree(self, players: List[Player]) -> QStandardItemModel:
+        model = QStandardItemModel()
+        model.setHorizontalHeaderLabels(["Full Name", "Birth Date", "Team", "Home City", "Squad", "Position"])
+        for player in players:
+            model.appendRow([
+                QStandardItem(player.full_name),
+                QStandardItem(str(player.birth_date)),
+                QStandardItem(player.team),
+                QStandardItem(player.home_city),
+                QStandardItem(player.squad),
+                QStandardItem(player.position)
+            ])
+        return model
+
+    def display_players_in_tree(self, tree_view: QTreeView):
+        try:
+            model = self.convert_players_to_tree(self.get_all_players())
+            tree_view.setModel(model)
+        except RuntimeError as e:
+            error_model = QStandardItemModel()
+            error_model.appendRow([QStandardItem(str(e))])
+            tree_view.setModel(error_model)

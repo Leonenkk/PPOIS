@@ -79,3 +79,32 @@ class PlayerController(QObject):
             return players
         except sqlite3.Error as e:
             raise RuntimeError(f"Database error: {str(e)}")
+
+    def get_all_players(self) -> List[Player]:
+        try:
+            players = self.db_repo.get_players()
+            self.players_updated.emit()
+            return players
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database error: {str(e)}")
+
+    def format_player_for_display(self, player: Player) -> str:
+        return f"{player.full_name} | {player.birth_date} | {player.team} | {player.home_city} | {player.squad} | {player.position}"
+
+    def display_all_players(self) -> List[str]:
+        try:
+            return [self.format_player_for_display(p) for p in self.get_all_players()]
+        except RuntimeError as e:
+            return [str(e)]
+
+    def display_search_results(self, search_conditions: dict) -> List[str]:
+        try:
+            return [self.format_player_for_display(p) for p in self.search_players(**search_conditions)]
+        except (PlayerNotFoundError, RuntimeError) as e:
+            return [str(e)]
+
+    def display_deleted_count(self, delete_conditions: dict) -> int:
+        try:
+            return self.delete_players(**delete_conditions)
+        except (DeletionFailedError, RuntimeError):
+            return 0

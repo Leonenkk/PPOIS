@@ -60,3 +60,22 @@ class PlayerController(QObject):
             return deleted_count
         except sqlite3.Error as e:
             raise RuntimeError(f"Database error: {str(e)}")
+
+    def search_players(self, full_name: Optional[str] = None, birth_date: Optional[date] = None,
+                       team: Optional[str] = None, home_city: Optional[str] = None,
+                       squad: Optional[str] = None, position: Optional[str] = None) -> List[Player]:
+        try:
+            players = self.db_repo.find_players(
+                full_name=full_name,
+                birth_date=birth_date,
+                team=team,
+                home_city=home_city,
+                squad=squad,
+                position=position
+            )
+            if not players:
+                raise PlayerNotFoundError("No players found with specified criteria")
+            self.search_results.emit(players) # type: ignore
+            return players
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database error: {str(e)}")

@@ -1,6 +1,6 @@
 from datetime import date
 from typing import Optional, List, Tuple
-
+import sqlite3
 import xml.etree.ElementTree as ET
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtGui import QStandardItemModel, QStandardItem

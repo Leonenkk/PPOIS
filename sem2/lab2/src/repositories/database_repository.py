@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import date
 from src.models.player import Player
-from typing import List
+from typing import List,Optional
 
 class DatabaseRepository:
     def __init__(self, db_path: str):
@@ -52,6 +52,45 @@ class DatabaseRepository:
         """, (player.full_name, player.birth_date.isoformat(), age, player.team,
               player.home_city, player.squad, player.position))
         self.connection.commit()
+
+    def delete_players(self, full_name: Optional[str] = None, birth_date: Optional[date] = None,
+                       team: Optional[str] = None, home_city: Optional[str] = None,
+                       squad: Optional[str] = None, position: Optional[str] = None) -> int:
+        query, params = self._build_delete_query(full_name, birth_date, team, home_city, squad, position)
+        self.cursor.execute(query, params)
+        self.connection.commit()
+        return self.cursor.rowcount
+
+    def _build_delete_query(self, full_name, birth_date, team, home_city, squad, position):
+        query = "DELETE FROM players WHERE 1=1"
+        params = []
+
+        if full_name:
+            query += " AND full_name LIKE ?"
+            params.append(f"%{full_name}%")
+        if birth_date:
+            query += " AND birth_date = ?"
+            params.append(birth_date.isoformat())
+        if team:
+            query += " AND team LIKE ?"
+            params.append(f"%{team}%")
+        if home_city:
+            query += " AND home_city LIKE ?"
+            params.append(f"%{home_city}%")
+        if squad:
+            query += " AND squad LIKE ?"
+            params.append(f"%{squad}%")
+        if position:
+            query += " AND position LIKE ?"
+            params.append(f"%{position}%")
+
+        return query, params
+
+
+
+
+
+
 
 # if __name__ == "__main__":
 #     import os

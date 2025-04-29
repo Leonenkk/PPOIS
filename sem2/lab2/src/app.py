@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QApplication
-from src.views.add_player_window import AddPlayerDialog
+from src.views.main_window import MainWindow
 
 
 def main():
     app = QApplication([])
-    window = AddPlayerDialog()
+    window = MainWindow()
     window.show()
     app.exec_()
 

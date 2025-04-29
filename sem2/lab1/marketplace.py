@@ -52,6 +52,13 @@ class MarketplaceManager:
     def update_product_price(self, product_id: int, new_price: float) -> None:
         product = next(p for p in self.get_all_products() if p.product_id == product_id)
         product.update_price(new_price)
+        for trader in self.traders:
+            if product in trader.stand.products:
+                trader.stand.products[trader.stand.products.index(product)].price = new_price
+        for buyer in self.buyers:
+            if buyer.cart.has_product(product_id):
+                cart_product = next(p for p in buyer.cart.cart_items if p.product_id == product_id)
+                cart_product.price = new_price
         self.save_state()
 
     def create_buyer(self, name: str, contact: str) -> Buyer:
@@ -87,8 +94,6 @@ class MarketplaceManager:
             return
         buyer.cart.negotiated_prices[product.product_id] = request['price']
         buyer.cart.add_to_cart(product, preserve_negotiated=True)
-        if seller:
-            seller.capital += request['price']
         self.save_state()
 
     def create_advertisement(self, description: str) -> Advertisement:

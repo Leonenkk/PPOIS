@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QTreeView
 from src.exceptions.exceptions import PlayerNotFoundError, DeletionFailedError
 from src.models.player import Player
 from src.repositories.database_repository import DatabaseRepository
+from src.services.xml_handler import XMLHandler
 
 
 class PlayerController(QObject):
@@ -131,3 +132,28 @@ class PlayerController(QObject):
             error_model = QStandardItemModel()
             error_model.appendRow([QStandardItem(str(e))])
             tree_view.setModel(error_model)
+
+    def get_paginated_players(self, offset: int, limit: int) -> Tuple[List[Player], int]:
+        try:
+            players = self.db_repo.get_paginated_players(offset, limit)
+            total = self.db_repo.count_players()
+            self.players_updated.emit()
+            return players, total
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database error: {str(e)}")
+
+    def import_from_xml(self, file_path: str) -> None:
+        try:
+            XMLHandler(self.db_repo).import_from_xml(file_path)
+            self.players_updated.emit()
+        except (ET.ParseError, FileNotFoundError) as e:
+            raise RuntimeError(f"XML error: {str(e)}")
+        except Exception as e:
+            raise RuntimeError(f"Import failed: {str(e)}")
+
+    def export_to_xml(self, file_path: str, players: Optional[List[Player]] = None) -> None:
+        try:
+            target_players = players if players else self.get_all_players()
+            XMLHandler(self.db_repo).export_to_xml(file_path, target_players)
+        except (IOError, ET.ParseError) as e:
+            raise RuntimeError(f"Export failed: {str(e)}")

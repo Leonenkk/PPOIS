@@ -107,3 +107,9 @@
 2. Запустите CLI:
    ```bash
    python cli.py
+   
+# Диаграммы 
+![classes.png](diagrams/project_classes.png)
+
+
+![classes.png](diagrams/states.png)

@@ -157,3 +157,32 @@ class PlayerController(QObject):
             XMLHandler(self.db_repo).export_to_xml(file_path, target_players)
         except (IOError, ET.ParseError) as e:
             raise RuntimeError(f"Export failed: {str(e)}")
+
+    def get_player_by_name(self, name: str) -> Optional[Player]:
+        try:
+            players = self.db_repo.find_players(full_name=name)
+            return players[0] if players else None
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database error: {str(e)}")
+
+    def count_players(self) -> int:
+        try:
+            return self.db_repo.count_players()
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database error: {str(e)}")
+
+    def update_player(self, original_player: Player, new_data: dict) -> None:
+        try:
+            if not new_data or not isinstance(new_data, dict):
+                raise RuntimeError("No update data provided or invalid data format")
+            self.db_repo.update_player(original_player, new_data)
+            self.players_updated.emit()
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database error: {str(e)}")
+
+    def clear_database(self) -> None:
+        try:
+            self.db_repo.delete_all_players()
+            self.players_updated.emit()
+        except sqlite3.Error as e:
+            raise RuntimeError(f"Database cleanup failed: {str(e)}")

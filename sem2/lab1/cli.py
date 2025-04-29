@@ -179,52 +179,67 @@ class CLI:
     def manage_stand(self):
         stand = self.current_trader.stand
         while True:
-            print("\n=== Управление стендом ===")
-            if stand.products:
-                print("Товары на стенде:")
-                for p in stand.products:
-                    print(f"[Товар] {p.name} | Цена: {p.price} руб. | ID: {p.product_id}")
-            else:
-                print("На стенде нет товаров.")
-            print("\n1. Добавить товар на стенд")
-            print("2. Удалить товар со стенда")
-            print("3. Назад")
+            self._print_stand_management(stand)
             action = input("> ").strip()
             if action == "1":
-                products = [p for p in self.current_trader.products if p not in stand.products]
-                if not products:
-                    print("Нет товаров для добавления.")
-                    continue
-                print("Товары, доступные для добавления:")
-                for i, p in enumerate(products, 1):
-                    print(f"{i}. {p.name} | Цена: {p.price} руб.")
-                idx = input("Введите номер товара (или 'n' для отмены): ").strip()
-                if idx.lower() == 'n':
-                    continue
-                if idx.isdigit() and 0 < int(idx) <= len(products):
-                    try:
-                        stand.add_product(products[int(idx) - 1])
-                        print("Товар добавлен на стенд!")
-                    except MarketplaceError as e:
-                        print(f"Ошибка: {e}")
-                else:
-                    print("Неверный ввод.")
+                self._handle_add_to_stand(stand)
             elif action == "2":
-                pid = input("Введите ID товара для удаления (или 'n' для отмены): ").strip()
-                if pid.lower() == 'n':
-                    continue
-                if pid.isdigit():
-                    try:
-                        stand.remove_product(int(pid))
-                        print("Товар удален со стенда!")
-                    except MarketplaceError as e:
-                        print(f"Ошибка: {e}")
-                else:
-                    print("Неверный ввод.")
+                self._handle_remove_from_stand(stand)
             elif action == "3":
                 break
             else:
                 print("Неверный выбор. Попробуйте снова.")
+
+    def _print_stand_management(self, stand):
+        print("\n=== Управление стендом ===")
+        if stand.products:
+            print("Товары на стенде:")
+            for p in stand.products:
+                print(f"[Товар] {p.name} | Цена: {p.price} руб. | ID: {p.product_id}")
+        else:
+            print("На стенде нет товаров.")
+        print("\n1. Добавить товар на стенд")
+        print("2. Удалить товар со стенда")
+        print("3. Назад")
+
+    def _handle_add_to_stand(self, stand):
+        products = [p for p in self.current_trader.products if p not in stand.products]
+        if not products:
+            print("Нет товаров для добавления.")
+            return
+        self._show_available_products(products)
+        self._add_selected_product(stand, products)
+
+    def _show_available_products(self, products):
+        print("Товары, доступные для добавления:")
+        for i, p in enumerate(products, 1):
+            print(f"{i}. {p.name} | Цена: {p.price} руб.")
+
+    def _add_selected_product(self, stand, products):
+        idx = input("Введите номер товара (или 'n' для отмены): ").strip()
+        if idx.lower() == 'n':
+            return
+        if idx.isdigit() and 0 < int(idx) <= len(products):
+            try:
+                stand.add_product(products[int(idx) - 1])
+                print("Товар добавлен на стенд!")
+            except MarketplaceError as e:
+                print(f"Ошибка: {e}")
+        else:
+            print("Неверный ввод.")
+
+    def _handle_remove_from_stand(self, stand):
+        pid = input("Введите ID товара для удаления (или 'n' для отмены): ").strip()
+        if pid.lower() == 'n':
+            return
+        if pid.isdigit():
+            try:
+                stand.remove_product(int(pid))
+                print("Товар удален со стенда!")
+            except MarketplaceError as e:
+                print(f"Ошибка: {e}")
+        else:
+            print("Неверный ввод.")
 
     def create_ad_flow(self):
         desc = input("Текст рекламы: ").strip()
@@ -297,67 +312,93 @@ class CLI:
         if not stands:
             print("Нет доступных стендов.")
             return
+
+        self._print_stands_list(stands)
+        stand = self._select_stand(stands)
+        if not stand:
+            return
+
+        self._show_stand_products(stand)
+        self._handle_stand_actions(stand)
+
+    def _print_stands_list(self, stands):
         print("\n=== Список стендов ===")
         for i, stand in enumerate(stands, 1):
             print(f"{i}. {stand.trader.name} (на стенде {len(stand.products)} товаров)")
+
+    def _select_stand(self, stands):
         idx = input("Введите номер стенда (или 'n' для отмены): ").strip()
         if idx.lower() == 'n':
-            return
+            return None
         if not idx.isdigit() or not (0 < int(idx) <= len(stands)):
             print("Неверный ввод.")
-            return
-        stand = stands[int(idx) - 1]
+            return None
+        return stands[int(idx) - 1]
+
+    def _show_stand_products(self, stand):
         print(f"\n=== Стенд: {stand.trader.name} ===")
         if not stand.products:
             print("На стенде нет товаров.")
         else:
             for p in stand.products:
                 print(f"[Товар] {p.name} | Цена: {p.price} руб. | ID: {p.product_id}")
+
+    def _handle_stand_actions(self, stand):
         action = input("\n1. Предложить цену\n2. Добавить в корзину\n3. Назад\n> ").strip()
         if action == "1":
-            pid = input("Введите ID товара: ").strip()
-            new_price = input("Ваше предложение: ").strip()
-            if pid.isdigit() and new_price.replace('.', '', 1).isdigit():
-                product = next((p for p in stand.products if p.product_id == int(pid)), None)
-                if product:
-                    if self.current_buyer.cart.has_product(product.product_id):
-                        print("Невозможно предложить цену: товар уже в корзине.")
-                        return
-                    for req in self.manager.negotiations.values():
-                        if req['product_id'] == product.product_id and req['buyer_id'] == self.current_buyer.buyer_id:
-                            print(" Вы уже отправили предложение по этому товару. Дождитесь ответа продавца.")
-                            return
-                    try:
-                        self.manager.create_negotiation(self.current_buyer.buyer_id, product.product_id, float(new_price))
-                        print("Предложение отправлено!")
-                    except MarketplaceError as e:
-                        print(f"Ошибка: {e}")
-                else:
-                    print("Товар не найден.")
-            else:
-                print("Неверный ввод.")
+            self._handle_price_negotiation(stand)
         elif action == "2":
-            pid = input("Введите ID товара для добавления в корзину: ").strip()
-            if pid.isdigit():
-                product = next((p for p in stand.products if p.product_id == int(pid)), None)
-                if product:
-                    if self.current_buyer.cart.has_product(product.product_id):
-                        print("Товар уже был добавлен в корзину.")
-                        return
-                    self.current_buyer.cart.negotiated_prices.pop(product.product_id, None)
-                    try:
-                        self.current_buyer.cart.add_to_cart(product)
-                        print("Товар добавлен в корзину!")
-                    except MarketplaceError as e:
-                        print(f"Ошибка: {e}")
-                else:
-                    print("Товар не найден.")
-            else:
-                print("Неверный ввод.")
-        elif action == "3":
-            return
-        else:
+            self._handle_add_to_cart(stand)
+        elif action != "3":
             print("Неверный выбор.")
+
+    def _handle_price_negotiation(self, stand):
+        pid = input("Введите ID товара: ").strip()
+        new_price = input("Ваше предложение: ").strip()
+        if pid.isdigit() and new_price.replace('.', '', 1).isdigit():
+            product = next((p for p in stand.products if p.product_id == int(pid)), None)
+            self._process_price_negotiation(product, pid, new_price)
+        else:
+            print("Неверный ввод.")
+
+    def _process_price_negotiation(self, product, pid, new_price):
+        if not product:
+            print("Товар не найден.")
+            return
+        if self.current_buyer.cart.has_product(product.product_id):
+            print("Невозможно предложить цену: товар уже в корзине.")
+            return
+        for req in self.manager.negotiations.values():
+            if req['product_id'] == product.product_id and req['buyer_id'] == self.current_buyer.buyer_id:
+                print(" Вы уже отправили предложение по этому товару. Дождитесь ответа продавца.")
+                return
+        try:
+            self.manager.create_negotiation(self.current_buyer.buyer_id, product.product_id, float(new_price))
+            print("Предложение отправлено!")
+        except MarketplaceError as e:
+            print(f"Ошибка: {e}")
+
+    def _handle_add_to_cart(self, stand):
+        pid = input("Введите ID товара для добавления в корзину: ").strip()
+        if pid.isdigit():
+            product = next((p for p in stand.products if p.product_id == int(pid)), None)
+            self._add_product_to_cart(product, pid)
+        else:
+            print("Неверный ввод.")
+
+    def _add_product_to_cart(self, product, pid):
+        if not product:
+            print("Товар не найден.")
+            return
+        if self.current_buyer.cart.has_product(product.product_id):
+            print("Товар уже был добавлен в корзину.")
+            return
+        self.current_buyer.cart.negotiated_prices.pop(product.product_id, None)
+        try:
+            self.current_buyer.cart.add_to_cart(product)
+            print("Товар добавлен в корзину!")
+        except MarketplaceError as e:
+            print(f"Ошибка: {e}")
 
     def manage_cart(self):
         cart = self.current_buyer.cart

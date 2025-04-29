@@ -138,3 +138,40 @@ class DatabaseRepository:
     def delete_all_players(self) -> None:
         self.cursor.execute("DELETE FROM players")
         self.connection.commit()
+
+    def update_player(self, original: Player, new_data: dict) -> None:
+        update_fields = []
+        params = []
+
+        if 'full_name' in new_data:
+            update_fields.append("full_name = ?")
+            params.append(new_data['full_name'])
+        if 'birth_date' in new_data:
+            update_fields.append("birth_date = ?")
+            params.append(new_data['birth_date'].isoformat())
+            update_fields.append("age = ?")
+            params.append(self._calculate_age(new_data['birth_date']))
+        if 'team' in new_data:
+            update_fields.append("team = ?")
+            params.append(new_data['team'])
+        if 'home_city' in new_data:
+            update_fields.append("home_city = ?")
+            params.append(new_data['home_city'])
+        if 'squad' in new_data:
+            update_fields.append("squad = ?")
+            params.append(new_data['squad'])
+        if 'position' in new_data:
+            update_fields.append("position = ?")
+            params.append(new_data['position'])
+
+        params.append(original.full_name)
+        params.append(original.birth_date.isoformat())
+
+        query = f"""
+            UPDATE players 
+            SET {", ".join(update_fields)} 
+            WHERE full_name = ? AND birth_date = ?
+        """
+
+        self.cursor.execute(query, params)
+        self.connection.commit()

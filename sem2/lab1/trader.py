@@ -22,7 +22,7 @@ class Trader:
         if self.trader_id <= 0:
             raise MarketplaceError("Неверный идентификатор торговца")
         if not is_valid_contact(self.contact_info):
-            raise MarketplaceError("Проверьте корректность введенных данных")
+            raise MarketplaceError("Проверьте корректность введенных данных.")
         if self.capital < 0:
             raise MarketplaceError("Капитал не может быть отрицательным")
         self.stand = Stand(

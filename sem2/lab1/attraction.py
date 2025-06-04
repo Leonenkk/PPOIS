@@ -15,6 +15,11 @@ class Attraction:
             raise MarketplaceError("ID аттракциона должен быть положительным")
         if self.ticket_price < 0:
             raise MarketplaceError("Цена билета не может быть отрицательной")
+        if not self.description.strip():
+            raise MarketplaceError("Некорректное описание")
+        if not self.name.strip():
+            raise MarketplaceError("Некорректное имя")
+
 
     def to_dict(self) -> Dict[str, Any]:
         return {

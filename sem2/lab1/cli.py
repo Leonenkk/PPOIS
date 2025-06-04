@@ -39,12 +39,15 @@ class CLI:
             return None
 
         trader = next((t for t in self.manager.traders if t.contact_info == contact_info), None)
-        if not trader:
-            create = input("Продавец не найден. Создать? (y/n): ").strip().lower()
-            if create == 'y':
-                name = input("Введите имя: ").strip()
-                trader = self.manager.create_trader(name, contact_info)
-        return trader
+        try:
+            if not trader:
+                create = input("Продавец не найден. Создать? (y/n): ").strip().lower()
+                if create == 'y':
+                    name = input("Введите имя: ").strip()
+                    trader = self.manager.create_trader(name, contact_info)
+            return trader
+        except MarketplaceError as e:
+            print(e)
 
     def authenticate_buyer(self) -> Optional[Buyer]:
         contact_info = input("Введите email/телефон: ").strip()
@@ -53,12 +56,15 @@ class CLI:
             return None
 
         buyer = next((b for b in self.manager.buyers if b.contact_info == contact_info), None)
-        if not buyer:
-            create = input("Покупатель не найден. Создать? (y/n): ").strip().lower()
-            if create == 'y':
-                name = input("Введите имя: ").strip()
-                buyer = self.manager.create_buyer(name, contact_info)
-        return buyer
+        try:
+            if not buyer:
+                create = input("Покупатель не найден. Создать? (y/n): ").strip().lower()
+                if create == 'y':
+                    name = input("Введите имя: ").strip()
+                    buyer = self.manager.create_buyer(name, contact_info)
+            return buyer
+        except MarketplaceError as e:
+            print(e)
 
     def trader_menu(self):
         while True:
@@ -243,16 +249,19 @@ class CLI:
 
     def create_ad_flow(self):
         desc = input("Текст рекламы: ").strip()
-        ad = self.manager.create_advertisement(desc)
-        if self.current_trader.capital < ad.price:
-            print("Недостаточно средств для размещения рекламы!")
-            return
-        self.current_trader.capital -= ad.price
-        ad.stand = {
-            "trader_name": self.current_trader.name,
-            "location": self.current_trader.stand.location
-        }
-        print(f"Реклама создана! С вашего счета списано {ad.price} руб.")
+        try:
+            ad = self.manager.create_advertisement(desc)
+            if self.current_trader.capital < ad.price:
+                print("Недостаточно средств для размещения рекламы!")
+                return
+            self.current_trader.capital -= ad.price
+            ad.stand = {
+                "trader_name": self.current_trader.name,
+                "location": self.current_trader.stand.location
+            }
+            print(f"Реклама создана! С вашего счета списано {ad.price} руб.")
+        except MarketplaceError as e:
+            print(e)
 
     def create_attraction_flow(self):
         name = input("Название аттракциона: ").strip()
@@ -262,8 +271,11 @@ class CLI:
         except ValueError:
             print("Неверное значение цены. Попробуйте снова.")
             return
-        self.manager.create_attraction(name, desc, price, self.current_trader)
-        print("Аттракцион создан!")
+        try:
+            self.manager.create_attraction(name, desc, price, self.current_trader)
+            print("Аттракцион создан!")
+        except MarketplaceError as e:
+            print(e)
 
     def view_negotiations(self):
         found = False

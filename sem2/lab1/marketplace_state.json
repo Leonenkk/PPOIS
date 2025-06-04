@@ -1,0 +1,678 @@
+{
+  "traders": [
+    {
+      "trader_id": 1,
+      "name": "maksim",
+      "contact_info": "maxleon1611@gmail.com",
+      "products": [
+        {
+          "product_id": 1,
+          "name": "cake",
+          "description": "strawberry",
+          "price": 50.0
+        },
+        {
+          "product_id": 2,
+          "name": "cockie",
+          "description": "chocolate",
+          "price": 10.0
+        },
+        {
+          "product_id": 14,
+          "name": "bubble gum",
+          "description": "apple",
+          "price": 40.0
+        },
+        {
+          "product_id": 15,
+          "name": "матрешка",
+          "description": "бабка",
+          "price": 45.0
+        },
+        {
+          "product_id": 21,
+          "name": "клубника",
+          "description": "белорусская",
+          "price": 20.0
+        }
+      ],
+      "capital": 2051.12,
+      "stand": {
+        "stand_id": 1,
+        "location": "Стенд maksim",
+        "products": [
+          {
+            "product_id": 1,
+            "name": "cake",
+            "description": "strawberry",
+            "price": 50.0
+          },
+          {
+            "product_id": 14,
+            "name": "bubble gum",
+            "description": "apple",
+            "price": 40.0
+          },
+          {
+            "product_id": 15,
+            "name": "матрешка",
+            "description": "бабка",
+            "price": 45.0
+          },
+          {
+            "product_id": 2,
+            "name": "cockie",
+            "description": "chocolate",
+            "price": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "trader_id": 2,
+      "name": "sas",
+      "contact_info": "s@mail.com",
+      "products": [
+        {
+          "product_id": 3,
+          "name": "tovar",
+          "description": "big",
+          "price": 80.0
+        },
+        {
+          "product_id": 4,
+          "name": "1",
+          "description": "tick",
+          "price": 78.0
+        }
+      ],
+      "capital": 1917.56,
+      "stand": {
+        "stand_id": 2,
+        "location": "Стенд sas",
+        "products": [
+          {
+            "product_id": 4,
+            "name": "1",
+            "description": "tick",
+            "price": 78.0
+          },
+          {
+            "product_id": 3,
+            "name": "tovar",
+            "description": "big",
+            "price": 80.0
+          }
+        ]
+      }
+    },
+    {
+      "trader_id": 3,
+      "name": "stepa",
+      "contact_info": "+375296080896",
+      "products": [],
+      "capital": 1834.59,
+      "stand": {
+        "stand_id": 3,
+        "location": "Стенд stepa",
+        "products": []
+      }
+    },
+    {
+      "trader_id": 5,
+      "name": "cdcd",
+      "contact_info": "+375297844567",
+      "products": [],
+      "capital": 1389.76,
+      "stand": {
+        "stand_id": 5,
+        "location": "Стенд cdcd",
+        "products": []
+      }
+    },
+    {
+      "trader_id": 10,
+      "name": "ghjgj",
+      "contact_info": "+375338888888",
+      "products": [],
+      "capital": 1618.82,
+      "stand": {
+        "stand_id": 10,
+        "location": "Стенд ghjgj",
+        "products": []
+      }
+    },
+    {
+      "trader_id": 12,
+      "name": "1",
+      "contact_info": "asdasdasd@asdasd.com",
+      "products": [
+        {
+          "product_id": 16,
+          "name": "3",
+          "description": "3",
+          "price": 10.0
+        },
+        {
+          "product_id": 18,
+          "name": "233",
+          "description": "233",
+          "price": 2000.0
+        }
+      ],
+      "capital": 1663.35,
+      "stand": {
+        "stand_id": 12,
+        "location": "Стенд 1",
+        "products": [
+          {
+            "product_id": 16,
+            "name": "3",
+            "description": "3",
+            "price": 10.0
+          },
+          {
+            "product_id": 18,
+            "name": "233",
+            "description": "233",
+            "price": 2000.0
+          }
+        ]
+      }
+    },
+    {
+      "trader_id": 14,
+      "name": "Dima",
+      "contact_info": "maxleon1611@gmail.com",
+      "products": [
+        {
+          "product_id": 19,
+          "name": "папая",
+          "description": "фрукт",
+          "price": 100.0
+        },
+        {
+          "product_id": 20,
+          "name": "папая",
+          "description": "фрукт",
+          "price": 100.0
+        }
+      ],
+      "capital": 1709.16,
+      "stand": {
+        "stand_id": 14,
+        "location": "Стенд Dima",
+        "products": []
+      }
+    },
+    {
+      "trader_id": 17,
+      "name": "Ostin",
+      "contact_info": "l@gmail.com",
+      "products": [],
+      "capital": 1970.18,
+      "stand": {
+        "stand_id": 17,
+        "location": "Стенд Ostin",
+        "products": []
+      }
+    }
+  ],
+  "buyers": [
+    {
+      "buyer_id": 1,
+      "name": "AA",
+      "contact_info": "a@gmail.com",
+      "cart": {
+        "cart_items": [
+          {
+            "product_id": 2,
+            "name": "cockie",
+            "description": "chocolate",
+            "price": 10.0
+          },
+          {
+            "product_id": 3,
+            "name": "tovar",
+            "description": "big",
+            "price": 80.0
+          },
+          {
+            "product_id": 4,
+            "name": "1",
+            "description": "tick",
+            "price": 78.0
+          }
+        ],
+        "negotiated_prices": {
+          "2": 10.0,
+          "3": 13.0,
+          "4": 23.0
+        }
+      },
+      "balance": 20.279999999999973
+    },
+    {
+      "buyer_id": 2,
+      "name": "Boris",
+      "contact_info": "b@gmail.com",
+      "cart": {
+        "cart_items": [],
+        "negotiated_prices": {}
+      },
+      "balance": 193.70000000000005
+    },
+    {
+      "buyer_id": 8,
+      "name": "M",
+      "contact_info": "2243880@gmail.com",
+      "cart": {
+        "cart_items": [
+          {
+            "product_id": 14,
+            "name": "bubble gum",
+            "description": "apple",
+            "price": 40.0
+          }
+        ],
+        "negotiated_prices": {
+          "14": 234.0
+        }
+      },
+      "balance": 1352.08
+    },
+    {
+      "buyer_id": 9,
+      "name": "qweqwe",
+      "contact_info": "sdfsnfsmndfn@sdfjks.com",
+      "cart": {
+        "cart_items": [],
+        "negotiated_prices": {}
+      },
+      "balance": 1497.75
+    },
+    {
+      "buyer_id": 10,
+      "name": "Stepa",
+      "contact_info": "+375293452367",
+      "cart": {
+        "cart_items": [],
+        "negotiated_prices": {}
+      },
+      "balance": 1745.92
+    }
+  ],
+  "ads": [
+    {
+      "ad_id": 1,
+      "description": "add",
+      "price": 100.0,
+      "start_time": "2025-04-16T17:52:12.540953",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 2,
+      "description": "adddd",
+      "price": 100.0,
+      "start_time": "2025-04-16T18:11:37.218193",
+      "duration": 600,
+      "stand": {
+        "trader_name": "sas",
+        "location": "Стенд sas"
+      }
+    },
+    {
+      "ad_id": 3,
+      "description": "add",
+      "price": 100.0,
+      "start_time": "2025-04-16T18:12:35.351676",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 4,
+      "description": "fdfd",
+      "price": 100.0,
+      "start_time": "2025-04-16T18:29:42.704251",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 5,
+      "description": "addd",
+      "price": 100.0,
+      "start_time": "2025-04-16T18:51:06.440603",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 6,
+      "description": "s add",
+      "price": 100.0,
+      "start_time": "2025-04-16T18:54:03.425274",
+      "duration": 600,
+      "stand": {
+        "trader_name": "sas",
+        "location": "Стенд sas"
+      }
+    },
+    {
+      "ad_id": 7,
+      "description": "come here",
+      "price": 100.0,
+      "start_time": "2025-04-16T21:00:11.613747",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 8,
+      "description": "reklama",
+      "price": 100.0,
+      "start_time": "2025-04-16T23:54:19.834802",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 9,
+      "description": "2 reklama",
+      "price": 100.0,
+      "start_time": "2025-04-16T23:54:57.201940",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 10,
+      "description": "reklama 3",
+      "price": 100.0,
+      "start_time": "2025-04-16T23:56:47.915422",
+      "duration": 600,
+      "stand": {
+        "trader_name": "sas",
+        "location": "Стенд sas"
+      }
+    },
+    {
+      "ad_id": 11,
+      "description": "reklama 4",
+      "price": 100.0,
+      "start_time": "2025-04-16T23:57:00.397684",
+      "duration": 600,
+      "stand": {
+        "trader_name": "sas",
+        "location": "Стенд sas"
+      }
+    },
+    {
+      "ad_id": 12,
+      "description": "вкусные торты тут",
+      "price": 100.0,
+      "start_time": "2025-04-29T19:54:16.852163",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 13,
+      "description": "все сюда",
+      "price": 100.0,
+      "start_time": "2025-04-29T20:39:31.170555",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 16,
+      "description": "....",
+      "price": 100.0,
+      "start_time": "2025-04-30T11:35:59.889200",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 18,
+      "description": "1",
+      "price": 100.0,
+      "start_time": "2025-04-30T11:36:14.487447",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 19,
+      "description": "2",
+      "price": 100.0,
+      "start_time": "2025-04-30T11:36:20.111561",
+      "duration": 600
+    },
+    {
+      "ad_id": 20,
+      "description": "Матрешки",
+      "price": 100.0,
+      "start_time": "2025-04-30T12:55:07.260070",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 21,
+      "description": "Заходите к нам",
+      "price": 100.0,
+      "start_time": "2025-06-03T14:51:41.703140",
+      "duration": 600
+    },
+    {
+      "ad_id": 22,
+      "description": "Заходите к нам",
+      "price": 100.0,
+      "start_time": "2025-06-03T14:57:17.792837",
+      "duration": 600
+    },
+    {
+      "ad_id": 23,
+      "description": "string",
+      "price": 100.0,
+      "start_time": "2025-06-03T15:29:04.912839",
+      "duration": 600
+    },
+    {
+      "ad_id": 24,
+      "description": "string",
+      "price": 100.0,
+      "start_time": "2025-06-03T15:33:58.639827",
+      "duration": 600
+    },
+    {
+      "ad_id": 25,
+      "description": "string",
+      "price": 100.0,
+      "start_time": "2025-06-03T18:03:31.471366",
+      "duration": 600
+    },
+    {
+      "ad_id": 26,
+      "description": "string",
+      "price": 100.0,
+      "start_time": "2025-06-03T18:15:12.326557",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 27,
+      "description": "string",
+      "price": 100.0,
+      "start_time": "2025-06-03T23:24:34.217529",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 28,
+      "description": "быстрее, все сюда",
+      "price": 100.0,
+      "start_time": "2025-06-04T00:09:12.541586",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 29,
+      "description": "dwdwddw",
+      "price": 100.0,
+      "start_time": "2025-06-04T00:39:13.202313",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 30,
+      "description": "рккркр",
+      "price": 100.0,
+      "start_time": "2025-06-04T01:02:10.004074",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    },
+    {
+      "ad_id": 31,
+      "description": "АНЧОУСЫ появились, прикинь",
+      "price": 100.0,
+      "start_time": "2025-06-04T03:50:16.711226",
+      "duration": 600,
+      "stand": {
+        "trader_name": "maksim",
+        "location": "Стенд maksim"
+      }
+    }
+  ],
+  "attractions": [
+    {
+      "attraction_id": 1,
+      "name": "колесо обозрения",
+      "description": "лучший вид в городе здесь",
+      "ticket_price": 45.0,
+      "seller_id": 1
+    },
+    {
+      "attraction_id": 2,
+      "name": "asas",
+      "description": "wow",
+      "ticket_price": 100.0,
+      "seller_id": 2
+    },
+    {
+      "attraction_id": 3,
+      "name": "new cool",
+      "description": "kolesooo",
+      "ticket_price": 12.0,
+      "seller_id": 1
+    },
+    {
+      "attraction_id": 4,
+      "name": "4 attr",
+      "description": "yee",
+      "ticket_price": 34.0,
+      "seller_id": 2
+    },
+    {
+      "attraction_id": 5,
+      "name": "рыбки",
+      "description": "красные",
+      "ticket_price": 13.0,
+      "seller_id": 1
+    },
+    {
+      "attraction_id": 7,
+      "name": "водные горки",
+      "description": "сколько",
+      "ticket_price": 30.0,
+      "seller_id": 1
+    },
+    {
+      "attraction_id": 9,
+      "name": "2",
+      "description": "2",
+      "ticket_price": 100.0,
+      "seller_id": 12
+    },
+    {
+      "attraction_id": 10,
+      "name": "американские горки",
+      "description": "очень быстро",
+      "ticket_price": 10.0,
+      "seller_id": 1
+    },
+    {
+      "attraction_id": 11,
+      "name": "сплит",
+      "description": "wow",
+      "ticket_price": 100.0,
+      "seller_id": 1
+    },
+    {
+      "attraction_id": 12,
+      "name": "сплит 2.0",
+      "description": "что-то новое",
+      "ticket_price": 43.0,
+      "seller_id": 1
+    }
+  ],
+  "negotiations": {
+    "54": {
+      "buyer_id": 2,
+      "product_id": 4,
+      "price": 12.0
+    }
+  },
+  "last_ids": {
+    "Trader": 17,
+    "Product": 25,
+    "Buyer": 10,
+    "Attraction": 12,
+    "Advertisement": 31,
+    "object": 54
+  }
+}
